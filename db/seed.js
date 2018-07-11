@@ -2,6 +2,7 @@ const mongoose = require('./connection.js')
 const User = require('./User.js')
 const Memory = require('./Memory.js')
 const Comment = require('./Comment.js')
+const bcrypt = require('bcrypt-nodejs')
 mongoose.Promise = Promise
 
 User.find({}).remove(() => {
