@@ -28,6 +28,16 @@ app.get('/', (req, res) => {
       console.log(err)
     })
 })
+
+app.get('/user', (req, res) => {
+  User.find({})
+    .then((users) => {
+      res.json(users)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
 // this is an example of the routing for a get request, at root, for Memory model
 // DATABASE does have other files besides Memory displayed in JSON response...
 
@@ -56,7 +66,7 @@ app.listen(app.get('port'), () => {
 })
 
 app.listen(4000, () => {
-  console.log('✅: REMORY-backend localhost:4000')
+  console.log('✅: REMORY-backend test localhost:4000/users')
 })
 // here we set the port for development / heroku back end at 3001
 // we set the local "listening" port for localhost:4000
