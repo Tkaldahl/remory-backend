@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const Memory = new Schema({
   _id: Schema.Types.ObjectId,
-  title: String,
+  titleString: String,
   authorName: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   postString: String,
   imageURL: String,

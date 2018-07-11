@@ -29,6 +29,7 @@ app.get('/', (req, res) => {
     })
 })
 // this is an example of the routing for a get request, at root, for Memory model
+// DATABASE does have other files besides Memory displayed in JSON response...
 
 // app.post('/', (req, res) => {
 //   console.log(req.body)
