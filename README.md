@@ -32,7 +32,8 @@ Comment Model | Properties:
         4. Comment.js [comment model defines mongoose, requires from connection.js, define Schema, const Comment = new Schema({ // propName: dataType, etc.}), module.exports = mongoose.model(’Comment’, Comment)
         5. seed.js  [define mongoose, require from connection.js, define and require all Models, define Mongoose.Promise = Promise…then code for each seed file for database  ModelName.find({}).remove( () => let example = modelName.create({propName: value, propName2: value, etc.}).then((example)=>{example.save(err=>console.log(err))})
     2. node_modules (default from npm install
-    3. index.js define/require express define/require cors define/require all models from ./db/connection.js define const app = express()  —CRUD functionality for all necessary models— ———receive axios calls from front end—— app.get app.post app.put app.delete  example: app.post('/', (req, res) => {Model.create( {propName: req.body.valueName, etc.}).then((item) => {res.json(quote)}….etc. res.redirect and .catch   app.set('port', process.env.PORT || 3001)  app.listen(app.get('port'), () => { console.log(`✅ Heroku PORT: ${app.get('port')} 🌟`) })  app.listen(4000, () => { console.log('success: REMORY troubleshooting port 4000') })
+    3. index.js define/require express define/require cors define/require all models from ./db/connection.js define const app = express()  —CRUD functionality for all necessary models— ———receive axios calls from front end—— a
     4. package.json
     5. package-lock.json
     6. readme.md   
+    7. public - directory for static files
