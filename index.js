@@ -6,7 +6,7 @@ const bodyParser = require('body-parser')
 // bodyParser takes care of JSON / HTTP request text transformations
 const User = require('./db/User.js')
 const Memory = require('./db/Memory.js')
-// const Comment = require('./db/Comment.js')
+const Comment = require('./db/Comment.js')
 // requires our models from db - required for RESTful routing of CRUD
 
 const app = express()
