@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production') {
       err => { console.log(err) }
     )
 } else {
-  mongoose.connect('mongodb://localhost:27017/remory', {useMongoClient: true, useNewUrlParser: true})
+  mongoose.connect('mongodb://localhost:27017/remory', {useNewUrlParser: true})
     .then(
       () => { console.log('✅ mongoDB connected to: localhost/remory') },
       err => { console.log(err) }
