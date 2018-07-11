@@ -5,11 +5,14 @@ const Comment = require('./Comment.js')
 const bcrypt = require('bcrypt-nodejs')
 mongoose.Promise = Promise
 
+const encryptPass = password =>
+  bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
+
 User.find({}).remove(() => {
   Memory.find({}).remove(() => {
     let daniel = User.create({
       email: 'daniel@sample.com',
-      password: '',
+      password: encryptPass('daniel'),
       firstName: 'Daniel',
       lastName: 'Lousa',
       profPicture: ''
@@ -19,7 +22,7 @@ User.find({}).remove(() => {
 
     let taylor = User.create({
       email: 'taylor@sample.com',
-      password: '',
+      password: encryptPass('taylor'),
       firstName: 'Taylor',
       lastName: 'Kaldahl',
       profPicture: ''
@@ -29,7 +32,7 @@ User.find({}).remove(() => {
 
     let isaiah = User.create({
       email: 'isaiah@sample.com',
-      password: '',
+      password: encryptPass('isaiah'),
       firstName: 'Isaiah',
       lastName: 'Berg',
       profPicture: ''
