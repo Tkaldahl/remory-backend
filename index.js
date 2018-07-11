@@ -8,6 +8,7 @@ const User = require('./db/User.js')
 const Memory = require('./db/Memory.js')
 const Comment = require('./db/Comment.js')
 // requires our models from db - required for RESTful routing of CRUD
+//testtest
 
 const app = express()
 // shortcut app phrase to invoke Express methods
@@ -56,7 +57,7 @@ app.listen(app.get('port'), () => {
 })
 
 app.listen(4000, () => {
-  console.log('✅: REMORY-backend on localhost:4000')
+  console.log('✅: REMORY-backend TEST localhost:4000')
 })
 // here we set the port for development / heroku back end at 3001
 // we set the local "listening" port for localhost:4000

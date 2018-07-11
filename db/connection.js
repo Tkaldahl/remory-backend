@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 if (process.env.NODE_ENV === 'production') {
-  mongoose.connect(process.env.MLAB_URL, { useNewUrlParser: true })
+  mongoose.connect('mongodb://default:password123@ds233571.mlab.com:33571/remory', { useNewUrlParser: true })
     .then(
       () => { console.log('✅ mongoDB connected to: MLAB_URL on heroku') },
       err => { console.log(err) }
