@@ -1,7 +1,6 @@
 const mongoose = require('./connection.js')
 const User = require('./User.js')
 const Memory = require('./Memory.js')
-const Comment = require('./Comment.js')
 const bcrypt = require('bcrypt-nodejs')
 mongoose.Promise = Promise
 
@@ -54,17 +53,17 @@ User.find({}).remove(() => {
     }).then((user) => {
       Promise.all([
         Memory.create({
-          title: '',
+          title: 'WOOOOOOO!!',
           authorName: user._id,
-          postString: '',
+          postString: 'I\'m so excited and I just can\'t hide it',
           ImageURL: ''
         }).then(memory => {
           user.memories.push(memory)
         }),
         Memory.create({
-          title: '',
+          title: 'I love Javascript',
           authorName: user._id,
-          postString: '',
+          postString: 'I love everything I can do with Javascript, I just wanted to share with you all the project I\'m working on!',
           ImageURL: ''
         }).then(memory => {
           user.memories.push(memory)
@@ -81,41 +80,41 @@ User.find({}).remove(() => {
     }).then((user) => {
       Promise.all([
         Memory.create({
-          title: '',
+          title: 'Biking',
           authorName: user._id,
-          postString: '',
+          postString: 'I biked my entire way accross North and South America, here\'s a picture from my trip',
           ImageURL: ''
         }).then(memory => {
           user.memories.push(memory)
         }),
         Memory.create({
-          title: '',
+          title: 'Express.js',
           authorName: user._id,
-          postString: '',
+          postString: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
           ImageURL: ''
         }).then(memory => {
           user.memories.push(memory)
         }),
         Memory.create({
-          title: '',
+          title: 'Anniversary',
           authorName: user._id,
-          postString: '',
+          postString: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa',
           ImageURL: ''
         }).then(memory => {
           user.memories.push(memory)
         }),
         Memory.create({
-          title: '',
+          title: 'Group Project!',
           authorName: user._id,
-          postString: '',
+          postString: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat',
           ImageURL: ''
         }).then(memory => {
           user.memories.push(memory)
         }),
         Memory.create({
-          title: '',
+          title: 'Dinner with the boys',
           authorName: user._id,
-          postString: '',
+          postString: 'Lorem ipsum dolor',
           ImageURL: ''
         }).then(memory => {
           user.memories.push(memory)
