@@ -41,7 +41,9 @@ User.find({}).remove(() => {
         }).then(memory => {
           user.memories.push(memory)
         })
-      ])
+      ]).then(() => {
+        user.save(err => console.log(err))
+      })
     })
 
     let taylor = User.create({
@@ -68,7 +70,9 @@ User.find({}).remove(() => {
         }).then(memory => {
           user.memories.push(memory)
         })
-      ])
+      ]).then(() => {
+        user.save(err => console.log(err))
+      })
     })
 
     let isaiah = User.create({
@@ -119,7 +123,9 @@ User.find({}).remove(() => {
         }).then(memory => {
           user.memories.push(memory)
         })
-      ])
+      ]).then(() => {
+        user.save(err => console.log(err))
+      })
     })
   })
 })
