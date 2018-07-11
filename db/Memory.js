@@ -7,7 +7,7 @@ const Memory = new Schema({
   authorName: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   postString: String,
   imageURL: String,
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
 })
 
