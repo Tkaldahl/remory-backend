@@ -155,8 +155,26 @@ app.post('/user/login', (req, res) => {
   }
 })
 
-// upon POST of form data at remory-api.herokuapp.com/user, new user in db
+app.post('/user/search', (req, res) => {
+  console.log('HTTP GET req at /user/search')
+  console.log(req.body.email)
+  console.log('above is req.body.email')
+  User.findOne({email: req.body.email}, function (err, result) {
+    if (err) { console.log(err.response) }
+    if (!result) { res.send('That user does not exist.') }
+    if (result) { console.log(result) }
+  })
+    .then((user) => {
+      res.json(user)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
+// this response sends the entire User object after search query from Axios
 
+// OLD POST ROUTING TO SAVE JUST IN CASE
+// upon POST of form data at remory-api.herokuapp.com/user, new user in db
 
 // // building route for creating user (POST) at /user without authentication
 // app.post('/user', (req, res) => {
@@ -206,9 +224,8 @@ app.post('/user/login', (req, res) => {
 
 // // upon POST of  data at ROOT/user, adds user in db
 
-
 // TO do:
-// VALIDATE NEW CHANGES FROM TAYLOR AND TEST ALL ROUTES 
+// VALIDATE NEW CHANGES FROM TAYLOR AND TEST ALL ROUTES
 // GET at user/:id for user specific memories
 // POST at /comment for new comment
 // DELETE at /memory/:id for deleting memory document
@@ -221,7 +238,7 @@ app.listen(app.get('port'), () => {
 })
 
 app.listen(4000, () => {
-  console.log('✅: REMORY-backend test2 POST /memory, default created, +Memory ')
+  console.log('✅: REMORY-backend test usersearch POST, respond {user}, log {}')
 })
 // here we set the port for development / heroku back end at 3001
 // we set the local "listening" port for localhost:4000
