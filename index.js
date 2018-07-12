@@ -10,6 +10,12 @@ const encryptPass = password =>
   bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
 // encryptPass(password) invoked on passwords passed via HTTP POST requests
 
+// Authentication dependencies start
+const jwt = require('jwt-simple')
+const config = require('./config/config')
+const mongoose = require('./db/connection.js')
+// Authentication dependencies end
+
 const User = require('./db/User.js')
 const Memory = require('./db/Memory.js')
 const Comment = require('./db/Comment.js')
@@ -56,25 +62,67 @@ app.get('/user', (req, res) => {
 // upon GET request to remory-api.herokuapp.com/user, JSON response with all users
 
 // building route for creating user (POST) at /user
-app.post('/user', (req, res) => {
-  console.log(req.body)
-  User.create({
-    email: req.body.email,
-    password: encryptPass(req.body.password),
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    profPicture: req.body.profPicture
-  })
-    .then((user) => {
-      res.json(user)
-    })
-    .then(() => {
-      res.redirect('/')
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+app.post('/user/signup', (req, res) => {
+  if (req.body.email && req.body.password) {
+    User.findOne({ email: req.body.email })
+      .then((user) => {
+        if (!user) {
+          User.create({
+            _id: new mongoose.Types.ObjectId(),
+            email: req.body.email,
+            password: req.body.password,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            profPicture: req.body.profPicture
+          })
+            .then(user => {
+              if (user) {
+                var payload = {
+                  id: this.id
+                }
+                var token = jwt.encode(payload, config.jwtSecret)
+                res.json({
+                  token: token
+                })
+              } else {
+                res.sendStatus(401)
+              }
+            })
+        } else {
+          res.sendStatus(401)
+        }
+      })
+  } else {
+    res.sendStatus(401)
+  }
 })
+
+// building route for creating user (POST) at /user/login
+app.post('/user/login', (req, res) => {
+  if (req.body.email && req.body.password) {
+    User.findOne({ email: req.body.email })
+      .then(user => {
+        if (user) {
+          if (user.password === req.body.password) {
+            var payload = {
+              id: user.id
+            }
+            var token = jwt.encode(payload, config.jwtSecret)
+            res.json({
+              token: token
+            })
+          } else {
+            res.sendStatus(401)
+          }
+        } else {
+          res.sendStatus(401)
+        }
+      })
+  } else {
+    res.sendStatus(401)
+  }
+})
+
 // upon POST of form data at remory-api.herokuapp.com/user, new user in db
 
 // TO do:
