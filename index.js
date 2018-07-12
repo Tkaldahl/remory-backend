@@ -164,12 +164,13 @@ app.post('/user/search', (req, res) => {
     if (!result) { res.send('That user does not exist.') }
   })
     .then((user) => {
-      res.json(user.memories)
+      res.json(user)
     })
     .catch((err) => {
       console.log(err)
     })
 })
+// this response sends the entire User object after search query from Axios
 
 // OLD POST ROUTING TO SAVE JUST IN CASE
 // upon POST of form data at remory-api.herokuapp.com/user, new user in db
@@ -236,7 +237,7 @@ app.listen(app.get('port'), () => {
 })
 
 app.listen(4000, () => {
-  console.log('✅: REMORY-backend testing usersearch POST')
+  console.log('✅: REMORY-backend testing usersearch POST with req.body.email')
 })
 // here we set the port for development / heroku back end at 3001
 // we set the local "listening" port for localhost:4000
