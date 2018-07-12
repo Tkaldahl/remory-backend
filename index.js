@@ -106,6 +106,54 @@ app.post('/user/login', (req, res) => {
 })
 // upon POST of authenticated login form data at remory-api.herokuapp.com/user/login
 
+// building route for creating user (POST) at /user without authentication
+app.post('/user', (req, res) => {
+  console.log('HTTP POST @ /USER')
+  console.log(req.body.newUser)
+  User.create(req.body.newUser)
+    .then((user) => {
+      res.json(user)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
+// upon POST of  data at ROOT/user, adds user in db
+
+// building route for creating memory (POST) at /memory without authentication
+app.post('/memory', (req, res) => {
+  console.log('HTTP POST @ /MEMORY')
+  console.log(req.body)
+  User.findOne({email: req.body.authorEmail}, function (err, result) {
+    if (err) { console.log(err) }
+    if (!result) {
+      console.log('no user email matching memory post, sent to default')
+      User.findOne({ email: 'default' })
+        .then(user => {
+          Memory.create(req.body)
+            .then(memory => {
+              user.memories.push(memory)
+            }).then(() => {
+              user.save(err => console.log(err))
+            })
+        }
+        )
+    }
+  })
+    .then(user => {
+      Memory.create(req.body)
+        .then((memory) => {
+          user.memories.push(memory)
+        })
+        .then(() => {
+          user.save(err => console.log(err))
+          console.log('SUCCESS! POST @ /MEMORY')
+        })
+    })
+})
+
+// upon POST of  data at ROOT/user, adds user in db
+
 // TO do:
 // POST at /memory for new memory
 // GET at user/:id for user specific memories
@@ -120,7 +168,7 @@ app.listen(app.get('port'), () => {
 })
 
 app.listen(4000, () => {
-  console.log('✅: REMORY-backend test POST /user/signup and /user/login')
+  console.log('✅: REMORY-backend test2 POST /memory, default created, +Memory ')
 })
 // here we set the port for development / heroku back end at 3001
 // we set the local "listening" port for localhost:4000
