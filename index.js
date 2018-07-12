@@ -155,10 +155,11 @@ app.post('/user/login', (req, res) => {
   }
 })
 
-app.get('user/search', (req, res) => {
+app.get('/user/search', (req, res) => {
   console.log('HTTP GET req at /user/search')
-  console.log(req.body)
-  User.findOne({email: req.body.email}, function (err, result) {
+  console.log(req.params)
+  console.log('above is req.params')
+  User.findOne({email: req.params.email}, function (err, result) {
     if (err) { console.log(err.response) }
     if (!result) { res.send('That user does not exist.') }
   })
