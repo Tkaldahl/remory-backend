@@ -179,11 +179,13 @@ app.post('/memory/search', (req, res) => {
   console.log('HTTP POST req at /user/search')
   console.log(req.body)
   console.log('above is req.body')
-  Memory.find({id: req.body.id}, function (err, result) {
+  Memory.find({authorName: req.body.id}, function (err, result) {
     if (err) { console.log(err.response) }
     if (!result) { res.send('That user does not have any memories to display.') }
     if (result) { console.log(result) }
   })
+    .sort({createdAt: -1})
+    .populate('authorName')
     .then((memoryArray) => {
       res.json(memoryArray)
     })
