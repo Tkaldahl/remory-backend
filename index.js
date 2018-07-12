@@ -157,9 +157,9 @@ app.post('/user/login', (req, res) => {
 
 app.post('/user/search', (req, res) => {
   console.log('HTTP GET req at /user/search')
-  console.log(req.body)
-  console.log('above is req.body')
-  User.findOne({email: req.body}, function (err, result) {
+  console.log(req.body.email)
+  console.log('above is req.body.email')
+  User.findOne({email: req.body.email}, function (err, result) {
     if (err) { console.log(err.response) }
     if (!result) { res.send('That user does not exist.') }
   })
@@ -236,7 +236,7 @@ app.listen(app.get('port'), () => {
 })
 
 app.listen(4000, () => {
-  console.log('✅: REMORY-backend testing usersearch')
+  console.log('✅: REMORY-backend testing usersearch POST')
 })
 // here we set the port for development / heroku back end at 3001
 // we set the local "listening" port for localhost:4000
