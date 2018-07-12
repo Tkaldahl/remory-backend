@@ -27,7 +27,7 @@ app.use(express.static('public'))
 
 // creating default path for root of API
 app.get('/', (req, res) => {
-  res.render('Welcome to the Remory API!')
+  res.send('Welcome to the Remory API!')
 })
 // responds with welcome message
 
