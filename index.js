@@ -14,6 +14,17 @@ const passport = require('passport')
 // passport enables authentication, functions in db/passport.js
 const bcrypt = require('bcrypt-nodejs')
 // bcrypt required to encrypt passwords upon POST / create requests
+
+const encryptPass = password =>
+  bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
+// encryptPass(password) invoked on passwords passed via HTTP POST requests
+
+// Authentication dependencies start
+const jwt = require('jwt-simple')
+const config = require('./config/config')
+const mongoose = require('./db/connection.js')
+// Authentication dependencies end
+
 const User = require('./db/User.js')
 const Memory = require('./db/Memory.js')
 const Comment = require('./db/Comment.js')
@@ -82,80 +93,122 @@ app.get('/user', (req, res) => {
 })
 // upon GET request to remory-api.herokuapp.com/user, JSON response with all users
 
-// building route for creating AUTHENTICATED +user (POST) at /user
+// building route for creating user (POST) at /user
 app.post('/user/signup', (req, res) => {
-  const signup = passport.authenticate('signup', {
-    successRedirect: '/',
-    failureRedirect: '/user/signup',
-    failureFlash: true
-  })
-  console.log('POST to /user/signup handled on backend')
-  return signup(req, res)
-})
-// upon POST of authenticated form data at remory-api.herokuapp.com/user
-
-// building route for login AUTHENTICATED user (POST) at /user/login
-app.post('/user/login', (req, res) => {
-  const login = passport.authenticate('login', {
-    successRedirect: '/',
-    failureRedirect: '/user/login',
-    failureFlash: true
-  })
-  console.log('POST to /user/login handled on backend')
-  return login(req, res)
-})
-// upon POST of authenticated login form data at remory-api.herokuapp.com/user/login
-
-// building route for creating user (POST) at /user without authentication
-app.post('/user', (req, res) => {
-  console.log('HTTP POST @ /USER')
-  console.log(req.body.newUser)
-  User.create(req.body.newUser)
-    .then((user) => {
-      res.json(user)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-})
-// upon POST of  data at ROOT/user, adds user in db
-
-// building route for creating memory (POST) at /memory without authentication
-app.post('/memory', (req, res) => {
-  console.log('HTTP POST @ /MEMORY')
-  console.log(req.body)
-  User.findOne({email: req.body.authorEmail}, function (err, result) {
-    if (err) { console.log(err) }
-    if (!result) {
-      console.log('no user email matching memory post, sent to default')
-      User.findOne({ email: 'default' })
-        .then(user => {
-          Memory.create(req.body)
-            .then(memory => {
-              user.memories.push(memory)
-            }).then(() => {
-              user.save(err => console.log(err))
+  if (req.body.email && req.body.password) {
+    User.findOne({ email: req.body.email })
+      .then((user) => {
+        if (!user) {
+          User.create({
+            _id: new mongoose.Types.ObjectId(),
+            email: req.body.email,
+            password: req.body.password,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            profPicture: req.body.profPicture
+          })
+            .then(user => {
+              if (user) {
+                var payload = {
+                  id: this.id
+                }
+                var token = jwt.encode(payload, config.jwtSecret)
+                res.json({
+                  token: token
+                })
+              } else {
+                res.sendStatus(401)
+              }
             })
+        } else {
+          res.sendStatus(401)
         }
-        )
-    }
-  })
-    .then(user => {
-      Memory.create(req.body)
-        .then((memory) => {
-          user.memories.push(memory)
-        })
-        .then(() => {
-          user.save(err => console.log(err))
-          console.log('SUCCESS! POST @ /MEMORY')
-        })
-    })
+      })
+  } else {
+    res.sendStatus(401)
+  }
 })
 
-// upon POST of  data at ROOT/user, adds user in db
+// building route for creating user (POST) at /user/login
+app.post('/user/login', (req, res) => {
+  if (req.body.email && req.body.password) {
+    User.findOne({ email: req.body.email })
+      .then(user => {
+        if (user) {
+          if (user.password === req.body.password) {
+            var payload = {
+              id: user.id
+            }
+            var token = jwt.encode(payload, config.jwtSecret)
+            res.json({
+              token: token
+            })
+          } else {
+            res.sendStatus(401)
+          }
+        } else {
+          res.sendStatus(401)
+        }
+      })
+  } else {
+    res.sendStatus(401)
+  }
+})
+
+// upon POST of form data at remory-api.herokuapp.com/user, new user in db
+
+
+// // building route for creating user (POST) at /user without authentication
+// app.post('/user', (req, res) => {
+//   console.log('HTTP POST @ /USER')
+//   console.log(req.body.newUser)
+//   User.create(req.body.newUser)
+//     .then((user) => {
+//       res.json(user)
+//     })
+//     .catch((err) => {
+//       console.log(err)
+//     })
+// })
+// // upon POST of  data at ROOT/user, adds user in db
+
+// // building route for creating memory (POST) at /memory without authentication
+// app.post('/memory', (req, res) => {
+//   console.log('HTTP POST @ /MEMORY')
+//   console.log(req.body)
+//   User.findOne({email: req.body.authorEmail}, function (err, result) {
+//     if (err) { console.log(err) }
+//     if (!result) {
+//       console.log('no user email matching memory post, sent to default')
+//       User.findOne({ email: 'default' })
+//         .then(user => {
+//           Memory.create(req.body)
+//             .then(memory => {
+//               user.memories.push(memory)
+//             }).then(() => {
+//               user.save(err => console.log(err))
+//             })
+//         }
+//         )
+//     }
+//   })
+//     .then(user => {
+//       Memory.create(req.body)
+//         .then((memory) => {
+//           user.memories.push(memory)
+//         })
+//         .then(() => {
+//           user.save(err => console.log(err))
+//           console.log('SUCCESS! POST @ /MEMORY')
+//         })
+//     })
+// })
+
+// // upon POST of  data at ROOT/user, adds user in db
+
 
 // TO do:
-// POST at /memory for new memory
+// VALIDATE NEW CHANGES FROM TAYLOR AND TEST ALL ROUTES 
 // GET at user/:id for user specific memories
 // POST at /comment for new comment
 // DELETE at /memory/:id for deleting memory document
