@@ -106,7 +106,7 @@ app.listen(app.get('port'), () => {
 })
 
 app.listen(4000, () => {
-  console.log('✅: REMORY-backend test localhost:4000/users')
+  console.log('✅: REMORY-backend test localhost:4000/user and localhost:4000')
 })
 // here we set the port for development / heroku back end at 3001
 // we set the local "listening" port for localhost:4000
