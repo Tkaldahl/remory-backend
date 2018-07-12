@@ -65,6 +65,7 @@ app.use(express.static('public'))
 
 // creating default path for root of API
 app.get('/', (req, res) => {
+  // User.findOne({id: })
   res.send('Welcome to the Remory API!')
 })
 // responds with welcome message
@@ -92,6 +93,18 @@ app.get('/user', (req, res) => {
     })
 })
 // upon GET request to remory-api.herokuapp.com/user, JSON response with all users
+
+// This function is for rendering only the requested user
+app.get('/user/:id', (req, res) => {
+  User.findOne({ _id: req.params.id })
+    .then((user) => {
+      console.log(user)
+      res.json(user)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
 
 // building route for creating user (POST) at /user
 app.post('/user/signup', (req, res) => {
