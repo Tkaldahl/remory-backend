@@ -155,8 +155,9 @@ app.post('/user/login', (req, res) => {
   }
 })
 
+// POST request to user/search query from front end Axios, returns one {User}
 app.post('/user/search', (req, res) => {
-  console.log('HTTP GET req at /user/search')
+  console.log('HTTP POST req at /user/search')
   console.log(req.body.email)
   console.log('above is req.body.email')
   User.findOne({email: req.body.email}, function (err, result) {
@@ -172,6 +173,24 @@ app.post('/user/search', (req, res) => {
     })
 })
 // this response sends the entire User object after search query from Axios
+
+// goal: post request to memory/search with displayedUser id string to generate [memories]
+app.post('/memory/search', (req, res) => {
+  console.log('HTTP POST req at /user/search')
+  console.log(req.body)
+  console.log('above is req.body')
+  Memory.find({id: req.body.id}, function (err, result) {
+    if (err) { console.log(err.response) }
+    if (!result) { res.send('That user does not have any memories to display.') }
+    if (result) { console.log(result) }
+  })
+    .then((memoryArray) => {
+      res.json(memoryArray)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
 
 // OLD POST ROUTING TO SAVE JUST IN CASE
 // upon POST of form data at remory-api.herokuapp.com/user, new user in db
