@@ -162,6 +162,7 @@ app.post('/user/search', (req, res) => {
   User.findOne({email: req.body.email}, function (err, result) {
     if (err) { console.log(err.response) }
     if (!result) { res.send('That user does not exist.') }
+    if (result) { console.log(result) }
   })
     .then((user) => {
       res.json(user)
@@ -237,7 +238,7 @@ app.listen(app.get('port'), () => {
 })
 
 app.listen(4000, () => {
-  console.log('✅: REMORY-backend testing usersearch POST with req.body.email')
+  console.log('✅: REMORY-backend test usersearch POST, respond {user}, log {}')
 })
 // here we set the port for development / heroku back end at 3001
 // we set the local "listening" port for localhost:4000
