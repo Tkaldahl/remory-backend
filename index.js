@@ -114,7 +114,8 @@ app.post('/user/signup', (req, res) => {
                 }
                 var token = jwt.encode(payload, config.jwtSecret)
                 res.json({
-                  token: token
+                  token: token,
+                  user: user
                 })
               } else {
                 res.sendStatus(401)
@@ -141,7 +142,8 @@ app.post('/user/login', (req, res) => {
             }
             var token = jwt.encode(payload, config.jwtSecret)
             res.json({
-              token: token
+              token: token,
+              user: user
             })
           } else {
             res.sendStatus(401)
