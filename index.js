@@ -2,28 +2,55 @@ const express = require('express')
 // express enables our back end / server functionality
 const cors = require('cors')
 // cors overrides safety measures preventing external reqs to deployed apps
+const flash = require('connect-flash')
+// flash message functionality possible in React?
+var cookieParser = require('cookie-parser')
+// cookieParser is needed to deal with session cookies for authentication
 const bodyParser = require('body-parser')
 // bodyParser takes care of JSON / HTTP request text transformations
+const session = require('express-session')
+// sessions required to have persistent user login experience with cookies
+const passport = require('passport')
+// passport enables authentication, functions in db/passport.js
 const bcrypt = require('bcrypt-nodejs')
 // bcrypt required to encrypt passwords upon POST / create requests
-const encryptPass = password =>
-  bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
-// encryptPass(password) invoked on passwords passed via HTTP POST requests
-
 const User = require('./db/User.js')
 const Memory = require('./db/Memory.js')
 const Comment = require('./db/Comment.js')
-// requires our models from db - required for RESTful routing of CRUD
+// all model schema
 
 const app = express()
 // shortcut app phrase to invoke Express methods
+
+require('./db/passport.js')(passport)
+// connects to Passport local strategy
+
+// requires our models from db - required for RESTful routing of CRUD
+var sessionOptions = {
+  saveUninitialized: true, // saved new sessions
+  resave: false, // do not automatically write to the session store
+  secret: 'REMORY-IS-AWESOME',
+  cookie: { httpOnly: true, maxAge: 2419200000 } // configure when sessions expires
+}
+
+app.use(cookieParser())
+
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(express.static('public'))
 // directs Express to utilize appropriate node modules
 // note: created public directory for any desired static back end assets
-// example path: http://localhost:4000/style.css
+// example path: http://localhost:4000/style.class
+app.use(cookieParser())
+app.use(session(sessionOptions))
+// uses an Express Session with sessionOptions props
+app.use(flash())
+// enables flash messages (unknown React functionality)
+app.use(passport.initialize())
+app.use(passport.session())
+// enables passport functionality
+app.use(express.static('public'))
+// allows static file hosting
 
 // creating default path for root of API
 app.get('/', (req, res) => {
@@ -55,30 +82,29 @@ app.get('/user', (req, res) => {
 })
 // upon GET request to remory-api.herokuapp.com/user, JSON response with all users
 
-// building route for creating user (POST) at /user
+// building route for creating AUTHENTICATED +user (POST) at /user
 app.post('/user', (req, res) => {
-  console.log(req.body)
-  User.create({
-    email: req.body.email,
-    password: encryptPass(req.body.password),
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    profPicture: req.body.profPicture
+  const signup = passport.authenticate('signup', {
+    successRedirect: '/',
+    failureRedirect: '/user/signup',
+    failureFlash: true
   })
-    .then((user) => {
-      res.json(user)
-    })
-    .then(() => {
-      res.redirect('/')
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+  return signup(req, res)
 })
-// upon POST of form data at remory-api.herokuapp.com/user, new user in db
+// upon POST of authenticated form data at remory-api.herokuapp.com/user
+
+// building route for login AUTHENTICATED user (POST) at /user/login
+app.post('/user/login', (req, res) => {
+  const login = passport.authenticate('login', {
+    successRedirect: '/',
+    failureRedirect: '/user/login',
+    failureFlash: true
+  })
+  return login(req, res)
+})
+// upon POST of authenticated login form data at remory-api.herokuapp.com/user/login
 
 // TO do:
-// POST at user login with authentication
 // POST at /memory for new memory
 // GET at user/:id for user specific memories
 // POST at /comment for new comment
