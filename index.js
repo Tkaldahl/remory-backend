@@ -83,12 +83,13 @@ app.get('/user', (req, res) => {
 // upon GET request to remory-api.herokuapp.com/user, JSON response with all users
 
 // building route for creating AUTHENTICATED +user (POST) at /user
-app.post('/user', (req, res) => {
+app.post('/user/signup', (req, res) => {
   const signup = passport.authenticate('signup', {
     successRedirect: '/',
     failureRedirect: '/user/signup',
     failureFlash: true
   })
+  console.log('POST to /user/signup handled on backend')
   return signup(req, res)
 })
 // upon POST of authenticated form data at remory-api.herokuapp.com/user
@@ -100,6 +101,7 @@ app.post('/user/login', (req, res) => {
     failureRedirect: '/user/login',
     failureFlash: true
   })
+  console.log('POST to /user/login handled on backend')
   return login(req, res)
 })
 // upon POST of authenticated login form data at remory-api.herokuapp.com/user/login
@@ -118,7 +120,7 @@ app.listen(app.get('port'), () => {
 })
 
 app.listen(4000, () => {
-  console.log('✅: REMORY-backend test localhost:4000/user and localhost:4000')
+  console.log('✅: REMORY-backend test POST /user/signup and /user/login')
 })
 // here we set the port for development / heroku back end at 3001
 // we set the local "listening" port for localhost:4000
