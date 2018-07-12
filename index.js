@@ -41,7 +41,19 @@ app.get('/memory', (req, res) => {
       console.log(err)
     })
 })
-// axios GET request at remory-api.herokuapp.com/memory returns: all memories
+// upon GET request at remory-api.herokuapp.com/memory returns: all memories
+
+// building route to see all users in db (useful for future search)
+app.get('/user', (req, res) => {
+  User.find({})
+    .then((users) => {
+      res.json(users)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
+// upon GET request to remory-api.herokuapp.com/user, JSON response with all users
 
 // building route for creating user (POST) at /user
 app.post('/user', (req, res) => {
@@ -65,39 +77,13 @@ app.post('/user', (req, res) => {
 })
 // upon POST of form data at remory-api.herokuapp.com/user, new user in db
 
-// building route to see all users in db (useful for future search)
-app.get('/user', (req, res) => {
-  User.find({})
-    .then((users) => {
-      res.json(users)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-})
-// upon GET request to remory-api.herokuapp.com/user, JSON response with all users
-
-
-// this is an example of the routing for a get request, at root, for Memory model
-// DATABASE does have other files besides Memory displayed in JSON response...
-
-// app.post('/', (req, res) => {
-//   console.log(req.body)
-//   Model.create({
-//     prop: req.body.propName,
-//     prop: req.body.propName2
-//   })
-//     .then((model) => {
-//       res.json(model)
-//     })
-//     .then(() => {
-//       res.redirect('/')
-//     })
-//     .catch((err) => {
-//       console.log(err)
-//     })
-// })
-// here we are saving for future use a POST request
+// TO do:
+// POST at user login with authentication
+// POST at /memory for new memory
+// GET at user/:id for user specific memories
+// POST at /comment for new comment
+// DELETE at /memory/:id for deleting memory document
+// PUT at /memory/:id for editing memory
 
 app.set('port', process.env.PORT || 3001)
 
