@@ -232,6 +232,7 @@ app.post('/memory/search', (req, res) => {
 // GET request to /memory/:id for help in rendering MemoryDetail if necessary
 app.get('/memory/:id', (req, res) => {
   Memory.findOne({ _id: req.params.id })
+    .populate('authorName')
     .then((memory) => {
       res.json(memory)
     })
