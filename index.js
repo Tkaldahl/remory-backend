@@ -229,6 +229,18 @@ app.post('/memory/search', (req, res) => {
 })
 // this request tested, on POST to /memory/search generates array in MemoryContainer
 
+// GET request to /memory/:id for help in rendering MemoryDetail if necessary
+app.get('/memory/:id', (req, res) => {
+  Memory.findOne({ id: req.params.id })
+    .then((memory) => {
+      res.json(memory)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
+// needs testing: GET using req.params to receive single JSON object of memory
+
 // in progress: PUT @ /memory/:id to update given document
 app.put('/memory/:id', (req, res) => {
   console.log('HTTP PUT req at /memory/:id')
