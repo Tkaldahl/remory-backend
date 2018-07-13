@@ -176,22 +176,19 @@ app.post('/user/search', (req, res) => {
 })
 // this response sends the entire User object after search query from Axios
 
-// needs testing: rewritten +memory (POST) at /memory without authentication
-// THIS NEEDS to have the id from this.state.displayedUser with the POST req.body
+// tested successfully with the id from this.state.displayedUser with the POST req.body
 // this also means that +Memory should only be available to authenticated users
 app.post('/memory', (req, res) => {
   console.log('HTTP POST @ /MEMORY')
   console.log(req.body)
   Memory.create({
     titleString: req.body.titleString,
-    authorName: [req.body.displayedUser],
+    authorName: mongoose.Types.ObjectId(req.body.displayedUser),
     postString: req.body.postString,
     imageURL: req.body.imageURL
-  }).then((memory) => {
-    memory.save(err => console.log(err))
   })
 })
-// this creates +memory with associated user id (if POST request includes displayedUser state from auth)
+// this creates +memory with associated user id (since POST request includes displayedUser state from auth)
 
 // post request to memory/search with displayedUser id string to generate [memories]
 app.post('/memory/search', (req, res) => {
@@ -257,7 +254,7 @@ app.listen(app.get('port'), () => {
 })
 
 app.listen(4000, () => {
-  console.log('✅: REMORY-backend test for memory detail')
+  console.log('✅: REMORY-backend test for +memory and detail')
 })
 // here we set the port for development / heroku back end at 3001
 // we set the local "listening" port for localhost:4000
