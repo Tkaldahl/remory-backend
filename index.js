@@ -230,12 +230,12 @@ app.post('/memory/search', (req, res) => {
 // this request tested, on POST to /memory/search generates array in MemoryContainer
 
 // in progress: PUT @ /memory/search to update document
-app.put('/memory', (req, res) => {
-  console.log('HTTP PUT req at /user/search')
-  console.log(req.body)
-  console.log('above is req.body')
+app.put('/memory/:id', (req, res) => {
+  console.log('HTTP PUT req at /memory')
+  console.log(req.params.id)
+  console.log('above is req.params.id')
   Memory.update({
-    id: req.body.id
+    id: req.params.id
   }, {
     $set: {
       titleString: req.body.titleString,
@@ -249,33 +249,14 @@ app.put('/memory', (req, res) => {
 })
 // awaits testing: needs to receive PUT request with :id and all new form data from axios
 
-// OLD POST ROUTING TO SAVE JUST IN CASE
-// upon POST of form data at remory-api.herokuapp.com/user, new user in db
-
-// // building route for creating user (POST) at /user without authentication
-// app.post('/user', (req, res) => {
-//   console.log('HTTP POST @ /USER')
-//   console.log(req.body.newUser)
-//   User.create(req.body.newUser)
-//     .then((user) => {
-//       res.json(user)
-//     })
-//     .catch((err) => {
-//       console.log(err)
-//     })
-// })
-// // upon POST of  data at ROOT/user, adds user in db
-
-
-
-// // upon POST of  data at ROOT/user, adds user in db
-
-// TO do:
-// VALIDATE NEW CHANGES FROM TAYLOR AND TEST ALL ROUTES
-// GET at user/:id for user specific memories
-// POST at /comment for new comment
-// DELETE at /memory/:id for deleting memory document
-// PUT at /memory/:id for editing memory
+app.delete('/memory/:id', (req, res) => {
+  console.log('HTTP DELETE req at /memory/:id')
+  console.log(req.params.id)
+  console.log('above is req.params.id')
+  Memory.deleteOne({id: req.params.id}, function (err) {
+    if (err) return (err)
+  })
+})
 
 app.set('port', process.env.PORT || 3001)
 
