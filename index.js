@@ -231,7 +231,7 @@ app.post('/memory/search', (req, res) => {
 
 // GET request to /memory/:id for help in rendering MemoryDetail if necessary
 app.get('/memory/:id', (req, res) => {
-  Memory.findOne({ id: req.params.id })
+  Memory.findOne({ _id: req.params.id })
     .then((memory) => {
       res.json(memory)
     })
@@ -247,7 +247,7 @@ app.put('/memory/:id', (req, res) => {
   console.log(req.params.id)
   console.log('above is req.params.id')
   Memory.update({
-    id: req.params.id
+    _id: req.params.id
   }, {
     $set: {
       titleString: req.body.titleString,
@@ -266,7 +266,7 @@ app.delete('/memory/:id', (req, res) => {
   console.log('HTTP DELETE req at /memory/:id')
   console.log(req.params.id)
   console.log('above is req.params.id')
-  Memory.deleteOne({id: req.params.id}, function (err) {
+  Memory.deleteOne({_id: req.params.id}, function (err) {
     if (err) return (err)
   })
 })
@@ -279,7 +279,7 @@ app.listen(app.get('port'), () => {
 })
 
 app.listen(4000, () => {
-  console.log('✅: REMORY-backend test PUT and DELETE for memory/:id')
+  console.log('✅: REMORY-backend test PUT and DELETE and _id: for memory/:id')
 })
 // here we set the port for development / heroku back end at 3001
 // we set the local "listening" port for localhost:4000
