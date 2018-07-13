@@ -229,9 +229,9 @@ app.post('/memory/search', (req, res) => {
 })
 // this request tested, on POST to /memory/search generates array in MemoryContainer
 
-// in progress: PUT @ /memory/search to update document
+// in progress: PUT @ /memory/:id to update given document
 app.put('/memory/:id', (req, res) => {
-  console.log('HTTP PUT req at /memory')
+  console.log('HTTP PUT req at /memory/:id')
   console.log(req.params.id)
   console.log('above is req.params.id')
   Memory.update({
@@ -249,6 +249,7 @@ app.put('/memory/:id', (req, res) => {
 })
 // awaits testing: needs to receive PUT request with :id and all new form data from axios
 
+// in progress: DELETE method at /memory/:id of API
 app.delete('/memory/:id', (req, res) => {
   console.log('HTTP DELETE req at /memory/:id')
   console.log(req.params.id)
@@ -257,6 +258,7 @@ app.delete('/memory/:id', (req, res) => {
     if (err) return (err)
   })
 })
+// needs testing with MemoryDetail buttons on the front end
 
 app.set('port', process.env.PORT || 3001)
 
@@ -265,7 +267,7 @@ app.listen(app.get('port'), () => {
 })
 
 app.listen(4000, () => {
-  console.log('✅: REMORY-backend test usersearch POST, respond {user}, log {}')
+  console.log('✅: REMORY-backend test PUT and DELETE for memory/:id')
 })
 // here we set the port for development / heroku back end at 3001
 // we set the local "listening" port for localhost:4000
