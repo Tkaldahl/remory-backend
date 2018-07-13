@@ -176,7 +176,21 @@ app.post('/user/search', (req, res) => {
 })
 // this response sends the entire User object after search query from Axios
 
-// goal: post request to memory/search with displayedUser id string to generate [memories]
+// tested successfully with the id from this.state.displayedUser with the POST req.body
+// this also means that +Memory should only be available to authenticated users
+app.post('/memory', (req, res) => {
+  console.log('HTTP POST @ /MEMORY')
+  console.log(req.body)
+  Memory.create({
+    titleString: req.body.titleString,
+    authorName: mongoose.Types.ObjectId(req.body.displayedUser),
+    postString: req.body.postString,
+    imageURL: req.body.imageURL
+  })
+})
+// this creates +memory with associated user id (since POST request includes displayedUser state from auth)
+
+// post request to memory/search with displayedUser id string to generate [memories]
 app.post('/memory/search', (req, res) => {
   console.log('HTTP POST req at /user/search')
   console.log(req.body)
@@ -195,64 +209,43 @@ app.post('/memory/search', (req, res) => {
       console.log(err)
     })
 })
+// this request tested, on POST to /memory/search generates array in MemoryContainer
 
-// OLD POST ROUTING TO SAVE JUST IN CASE
-// upon POST of form data at remory-api.herokuapp.com/user, new user in db
+// GET request to /memory/:id for help in rendering MemoryDetail if necessary
+app.get('/memory/:id', (req, res) => {
+  Memory.findOne({ _id: req.params.id })
+    .populate('authorName')
+    .then((memory) => {
+      res.json(memory)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
+// needs testing: GET using req.params to receive single JSON object of memory
 
-// // building route for creating user (POST) at /user without authentication
-// app.post('/user', (req, res) => {
-//   console.log('HTTP POST @ /USER')
-//   console.log(req.body.newUser)
-//   User.create(req.body.newUser)
-//     .then((user) => {
-//       res.json(user)
-//     })
-//     .catch((err) => {
-//       console.log(err)
-//     })
-// })
-// // upon POST of  data at ROOT/user, adds user in db
+// in progress: PUT @ /memory/:id to update given document
+app.put('/memory/:id', (req, res) => {
+  console.log('HTTP PUT req at /memory/:id')
+  console.log(req.params.id)
+  console.log('above is req.params.id')
+  Memory.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, memory) => {
+    if (err) return res.status(500).send(err)
+    return res.send(memory)
+  })
+})
+// awaits testing: needs to receive PUT request with :id and all new form data from axios
 
-// // building route for creating memory (POST) at /memory without authentication
-// app.post('/memory', (req, res) => {
-//   console.log('HTTP POST @ /MEMORY')
-//   console.log(req.body)
-//   User.findOne({email: req.body.authorEmail}, function (err, result) {
-//     if (err) { console.log(err) }
-//     if (!result) {
-//       console.log('no user email matching memory post, sent to default')
-//       User.findOne({ email: 'default' })
-//         .then(user => {
-//           Memory.create(req.body)
-//             .then(memory => {
-//               user.memories.push(memory)
-//             }).then(() => {
-//               user.save(err => console.log(err))
-//             })
-//         }
-//         )
-//     }
-//   })
-//     .then(user => {
-//       Memory.create(req.body)
-//         .then((memory) => {
-//           user.memories.push(memory)
-//         })
-//         .then(() => {
-//           user.save(err => console.log(err))
-//           console.log('SUCCESS! POST @ /MEMORY')
-//         })
-//     })
-// })
-
-// // upon POST of  data at ROOT/user, adds user in db
-
-// TO do:
-// VALIDATE NEW CHANGES FROM TAYLOR AND TEST ALL ROUTES
-// GET at user/:id for user specific memories
-// POST at /comment for new comment
-// DELETE at /memory/:id for deleting memory document
-// PUT at /memory/:id for editing memory
+// in progress: DELETE method at /memory/:id of API
+app.delete('/memory/:id', (req, res) => {
+  console.log('HTTP DELETE req at /memory/:id')
+  console.log(req.params.id)
+  console.log('above is req.params.id')
+  Memory.deleteOne({_id: req.params.id}, function (err) {
+    if (err) return (err)
+  })
+})
+// needs testing with MemoryDetail buttons on the front end
 
 app.set('port', process.env.PORT || 3001)
 
@@ -261,7 +254,7 @@ app.listen(app.get('port'), () => {
 })
 
 app.listen(4000, () => {
-  console.log('✅: REMORY-backend test usersearch POST, respond {user}, log {}')
+  console.log('✅: REMORY-backend test for +memory and detail')
 })
 // here we set the port for development / heroku back end at 3001
 // we set the local "listening" port for localhost:4000
