@@ -176,37 +176,22 @@ app.post('/user/search', (req, res) => {
 })
 // this response sends the entire User object after search query from Axios
 
-// needs testing: confirm route for +memory (POST) at /memory without authentication
+// needs testing: rewritten +memory (POST) at /memory without authentication
+// THIS NEEDS to have the id from this.state.displayedUser with the POST req.body
+// this also means that +Memory should only be available to authenticated users
 app.post('/memory', (req, res) => {
   console.log('HTTP POST @ /MEMORY')
   console.log(req.body)
-  User.findOne({email: req.body.authorEmail}, function (err, result) {
-    if (err) { console.log(err) }
-    if (!result) {
-      console.log('no user email matching memory post, sent to default')
-      User.findOne({ email: 'default' })
-        .then(user => {
-          Memory.create(req.body)
-            .then(memory => {
-              user.memories.push(memory)
-            }).then(() => {
-              user.save(err => console.log(err))
-            })
-        })
-    }
+  Memory.create({
+    titleString: req.body.titleString,
+    authorName: [req.body.displayedUser],
+    postString: req.body.postString,
+    imageURL: req.body.imageURL
+  }).then((memory) => {
+    memory.save(err => console.log(err))
   })
-    .then(user => {
-      Memory.create(req.body)
-        .then((memory) => {
-          user.memories.push(memory)
-        })
-        .then(() => {
-          user.save(err => console.log(err))
-          console.log('SUCCESS! POST @ /MEMORY')
-        })
-    })
 })
-// this sends +memory to whichever associated user email (optional feature to add: tie to auth)
+// this creates +memory with associated user id (if POST request includes displayedUser state from auth)
 
 // post request to memory/search with displayedUser id string to generate [memories]
 app.post('/memory/search', (req, res) => {
