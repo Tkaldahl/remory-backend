@@ -176,7 +176,39 @@ app.post('/user/search', (req, res) => {
 })
 // this response sends the entire User object after search query from Axios
 
-// goal: post request to memory/search with displayedUser id string to generate [memories]
+// needs testing: confirm route for +memory (POST) at /memory without authentication
+app.post('/memory', (req, res) => {
+  console.log('HTTP POST @ /MEMORY')
+  console.log(req.body)
+  User.findOne({email: req.body.authorEmail}, function (err, result) {
+    if (err) { console.log(err) }
+    if (!result) {
+      console.log('no user email matching memory post, sent to default')
+      User.findOne({ email: 'default' })
+        .then(user => {
+          Memory.create(req.body)
+            .then(memory => {
+              user.memories.push(memory)
+            }).then(() => {
+              user.save(err => console.log(err))
+            })
+        })
+    }
+  })
+    .then(user => {
+      Memory.create(req.body)
+        .then((memory) => {
+          user.memories.push(memory)
+        })
+        .then(() => {
+          user.save(err => console.log(err))
+          console.log('SUCCESS! POST @ /MEMORY')
+        })
+    })
+})
+// this sends +memory to whichever associated user email (optional feature to add: tie to auth)
+
+// post request to memory/search with displayedUser id string to generate [memories]
 app.post('/memory/search', (req, res) => {
   console.log('HTTP POST req at /user/search')
   console.log(req.body)
@@ -195,6 +227,27 @@ app.post('/memory/search', (req, res) => {
       console.log(err)
     })
 })
+// this request tested, on POST to /memory/search generates array in MemoryContainer
+
+// in progress: PUT @ /memory/search to update document
+app.put('/memory', (req, res) => {
+  console.log('HTTP PUT req at /user/search')
+  console.log(req.body)
+  console.log('above is req.body')
+  Memory.update({
+    id: req.body.id
+  }, {
+    $set: {
+      titleString: req.body.titleString,
+      authorName: req.body.authorName,
+      postString: req.body.postString,
+      imageURL: req.body.imageURL,
+      createdAt: Date.now
+    }
+  }
+  )
+})
+// awaits testing: needs to receive PUT request with :id and all new form data from axios
 
 // OLD POST ROUTING TO SAVE JUST IN CASE
 // upon POST of form data at remory-api.herokuapp.com/user, new user in db
@@ -213,37 +266,7 @@ app.post('/memory/search', (req, res) => {
 // })
 // // upon POST of  data at ROOT/user, adds user in db
 
-// // building route for creating memory (POST) at /memory without authentication
-// app.post('/memory', (req, res) => {
-//   console.log('HTTP POST @ /MEMORY')
-//   console.log(req.body)
-//   User.findOne({email: req.body.authorEmail}, function (err, result) {
-//     if (err) { console.log(err) }
-//     if (!result) {
-//       console.log('no user email matching memory post, sent to default')
-//       User.findOne({ email: 'default' })
-//         .then(user => {
-//           Memory.create(req.body)
-//             .then(memory => {
-//               user.memories.push(memory)
-//             }).then(() => {
-//               user.save(err => console.log(err))
-//             })
-//         }
-//         )
-//     }
-//   })
-//     .then(user => {
-//       Memory.create(req.body)
-//         .then((memory) => {
-//           user.memories.push(memory)
-//         })
-//         .then(() => {
-//           user.save(err => console.log(err))
-//           console.log('SUCCESS! POST @ /MEMORY')
-//         })
-//     })
-// })
+
 
 // // upon POST of  data at ROOT/user, adds user in db
 
