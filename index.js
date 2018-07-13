@@ -272,7 +272,7 @@ app.listen(app.get('port'), () => {
 })
 
 app.listen(4000, () => {
-  console.log('✅: REMORY-backend test PUT and DELETE and _id: for memory/:id')
+  console.log('✅: REMORY-backend test for memory detail')
 })
 // here we set the port for development / heroku back end at 3001
 // we set the local "listening" port for localhost:4000
