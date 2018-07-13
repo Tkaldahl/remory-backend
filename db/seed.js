@@ -4,6 +4,13 @@ const Memory = require('./Memory.js')
 const bcrypt = require('bcrypt-nodejs')
 mongoose.Promise = Promise
 
+// I've removed password encryption for the moment. When we want to incorporate it again, the code is below.
+// in User.create({}) replace:
+// password: 'isaiah',
+// with
+// password: encryptPass('isaiah'),
+
+
 const encryptPass = password =>
   bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
 
@@ -12,7 +19,7 @@ User.find({}).remove(() => {
     let daniel = User.create({
       _id: new mongoose.Types.ObjectId,
       email: 'daniel@sample.com',
-      password: encryptPass('daniel'),
+      password: 'daniel',
       firstName: 'Daniel',
       lastName: 'Lousa',
       profPicture: 'https://scontent-atl3-1.xx.fbcdn.net/v/t1.0-9/34814392_446060815806750_6293684533975842816_o.jpg?_nc_cat=0&oh=d554eae8f49ba4b81977bd797494a392&oe=5BE4ADF0',
@@ -57,7 +64,7 @@ User.find({}).remove(() => {
     let taylor = User.create({
       _id: new mongoose.Types.ObjectId,
       email: 'taylor@sample.com',
-      password: encryptPass('taylor'),
+      password: 'taylor',
       firstName: 'Taylor',
       lastName: 'Kaldahl',
       profPicture: 'https://scontent-atl3-1.xx.fbcdn.net/v/t31.0-1/14305452_10154514938472520_1717618365352755594_o.jpg?_nc_cat=0&oh=0a83a92517c2e524926ab5d13595cc35&oe=5B9F7E72',
@@ -92,7 +99,7 @@ User.find({}).remove(() => {
     let isaiah = User.create({
       _id: new mongoose.Types.ObjectId,
       email: 'isaiah@sample.com',
-      password: encryptPass('isaiah'),
+      password: 'isaiah',
       firstName: 'Isaiah',
       lastName: 'Berg',
       profPicture: 'nopicture',
