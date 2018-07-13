@@ -246,18 +246,10 @@ app.put('/memory/:id', (req, res) => {
   console.log('HTTP PUT req at /memory/:id')
   console.log(req.params.id)
   console.log('above is req.params.id')
-  Memory.update({
-    _id: req.params.id
-  }, {
-    $set: {
-      titleString: req.body.titleString,
-      authorName: req.body.authorName,
-      postString: req.body.postString,
-      imageURL: req.body.imageURL,
-      createdAt: Date.now
-    }
-  }
-  )
+  Memory.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, memory) => {
+    if (err) return res.status(500).send(err)
+    return res.send(memory)
+  })
 })
 // awaits testing: needs to receive PUT request with :id and all new form data from axios
 
