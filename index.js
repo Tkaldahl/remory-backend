@@ -187,7 +187,16 @@ app.post('/memory', (req, res) => {
     postString: req.body.postString,
     imageURL: req.body.imageURL
   })
+    .then((memory) => {
+      console.log(memory)
+    }
+    // User.findOneAndUpdate({id: req.body.displayedUser}, function (err, result) {
+    //   // result.memories.push(req.body.id)
+    //   console.log(result)
+    // })
+    )
 })
+
 // this creates +memory with associated user id (since POST request includes displayedUser state from auth)
 
 // post request to memory/search with displayedUser id string to generate [memories]
@@ -225,13 +234,19 @@ app.get('/memory/:id', (req, res) => {
 // needs testing: GET using req.params to receive single JSON object of memory
 
 // in progress: PUT @ /memory/:id to update given document
-app.put('/memory/:id', (req, res) => {
+app.put('/memory/:id/update', (req, res) => {
   console.log('HTTP PUT req at /memory/:id')
   console.log(req.params.id)
   console.log('above is req.params.id')
-  Memory.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, memory) => {
-    if (err) return res.status(500).send(err)
-    return res.send(memory)
+  console.log(req.body)
+  Memory.findByIdAndUpdate(req.params.id, req.body, /* {new: true},  */(err, memory) => {
+    if (err) {
+      console.log(error)
+      return res.status(500).send(err)
+    }
+    // memory = req.body
+    console.log(memory)
+    return res.json(memory)
   })
 })
 // awaits testing: needs to receive PUT request with :id and all new form data from axios
