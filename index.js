@@ -232,17 +232,14 @@ app.get('/memory/:id', (req, res) => {
 // needs testing: GET using req.params to receive single JSON object of memory
 
 // in progress: PUT @ /memory/:id to update given document
-app.put('/memory/:id/update', (req, res) => {
-  console.log('HTTP PUT req at /memory/:id')
-  console.log(req.params.id)
-  console.log('above is req.params.id')
-  console.log(req.body)
-  Memory.findByIdAndUpdate(req.params.id, req.body, /* {new: true},  */(err, memory) => {
+app.put('/memory/update', (req, res) => {
+  console.log('HTTP PUT req at /memory/update')
+  console.log('req.body is: ' + req.body)
+  Memory.findOneAndUpdate({_id: req.body.id}, {$set: {postString: req.body.newContent}}, (err, memory) => {
     if (err) {
       console.log(err)
       return res.status(500).send(err)
     }
-    // memory = req.body
     console.log(memory)
     return res.json(memory)
   })
