@@ -253,7 +253,6 @@ app.put('/memory/:id/update', (req, res) => {
 app.delete('/memory/:id', (req, res) => {
   console.log('HTTP DELETE req at /memory/:id')
   console.log('This is the id of the memory we will delete: ' + req.body.id)
-  console.log('above is req.params.id and req.body.id')
   Memory.deleteOne({_id: req.body.id}, function (err) {
     if (err) return (err)
   })
