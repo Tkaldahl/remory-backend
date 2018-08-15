@@ -187,14 +187,21 @@ app.post('/memory', (req, res) => {
     postString: req.body.postString,
     imageURL: req.body.imageURL
   })
+    .then((memory) => {
+      console.log(memory)
+    }
+    // User.findOneAndUpdate({id: req.body.displayedUser}, function (err, result) {
+    //   // result.memories.push(req.body.id)
+    //   console.log(result)
+    // })
+    )
 })
+
 // this creates +memory with associated user id (since POST request includes displayedUser state from auth)
 
 // post request to memory/search with displayedUser id string to generate [memories]
 app.post('/memory/search', (req, res) => {
   console.log('HTTP POST req at /user/search')
-  console.log(req.body)
-  console.log('above is req.body')
   Memory.find({authorName: req.body.id}, function (err, result) {
     if (err) { console.log(err.response) }
     if (!result) { res.send('That user does not have any memories to display.') }
@@ -225,13 +232,19 @@ app.get('/memory/:id', (req, res) => {
 // needs testing: GET using req.params to receive single JSON object of memory
 
 // in progress: PUT @ /memory/:id to update given document
-app.put('/memory/:id', (req, res) => {
+app.put('/memory/:id/update', (req, res) => {
   console.log('HTTP PUT req at /memory/:id')
   console.log(req.params.id)
   console.log('above is req.params.id')
-  Memory.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, memory) => {
-    if (err) return res.status(500).send(err)
-    return res.send(memory)
+  console.log(req.body)
+  Memory.findByIdAndUpdate(req.params.id, req.body, /* {new: true},  */(err, memory) => {
+    if (err) {
+      console.log(err)
+      return res.status(500).send(err)
+    }
+    // memory = req.body
+    console.log(memory)
+    return res.json(memory)
   })
 })
 // awaits testing: needs to receive PUT request with :id and all new form data from axios
@@ -239,11 +252,14 @@ app.put('/memory/:id', (req, res) => {
 // in progress: DELETE method at /memory/:id of API
 app.delete('/memory/:id', (req, res) => {
   console.log('HTTP DELETE req at /memory/:id')
-  console.log(req.params.id)
-  console.log('above is req.params.id')
-  Memory.deleteOne({_id: req.params.id}, function (err) {
+  console.log('This is the id of the memory we will delete: ' + req.body.id)
+  console.log('above is req.params.id and req.body.id')
+  Memory.deleteOne({_id: req.body.id}, function (err) {
     if (err) return (err)
   })
+    .catch((err) => {
+      console.log(err)
+    })
 })
 // needs testing with MemoryDetail buttons on the front end
 
